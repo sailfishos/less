@@ -1,0 +1,46 @@
+From 5396b6b77d0248678f716038dc747d6898acb0b3 Mon Sep 17 00:00:00 2001
+From: Stephen Gallagher <sgallagh@redhat.com>
+Date: Fri, 22 Jan 2021 09:49:13 -0500
+Subject: [PATCH] Test for fsync on tty
+
+Signed-off-by: Stephen Gallagher <sgallagh@redhat.com>
+
+Modified for less 581.2 Filip Januš <fjanus@redhat.com>
+diff -ur less-581.2/configure.ac less_fsync/configure.ac
+--- less-581.2/configure.ac	2021-04-28 17:00:08.000000000 +0200
++++ less_fsync/configure.ac	2021-05-06 10:59:07.560062397 +0200
+@@ -221,6 +221,8 @@
+ 	[Define HAVE_TIME_T if your system supports the "time_t" type.])
+ AH_TEMPLATE([HAVE_STRERROR],
+ 	[Define HAVE_STRERROR if you have the strerror() function.])
++AH_TEMPLATE([HAVE_FSYNC],
++	[Define HAVE_FSYNC if fsync() on a tty works.])
+ AH_TEMPLATE([HAVE_FILENO],
+ 	[Define HAVE_FILENO if you have the fileno() macro.])
+ AH_TEMPLATE([HAVE_ERRNO],
+@@ -274,7 +276,7 @@
+ 
+ # Checks for library functions.
+ AC_TYPE_SIGNAL
+-AC_CHECK_FUNCS([fchmod fsync nanosleep poll popen realpath _setjmp sigprocmask sigsetmask snprintf stat system ttyname usleep])
++AC_CHECK_FUNCS([fchmod nanosleep poll popen realpath _setjmp sigprocmask sigsetmask snprintf stat system ttyname usleep])
+ 
+ # AC_CHECK_FUNCS may not work for inline functions, so test these separately.
+ AC_MSG_CHECKING(for memcpy)
+@@ -321,6 +323,16 @@
+ #endif], [static char *x; x = strerror(0);],
+   [AC_MSG_RESULT(yes); AC_DEFINE(HAVE_STRERROR)], [AC_MSG_RESULT(no)])
+ 
++AC_MSG_CHECKING(for fsync)
++AC_TRY_RUN([
++#include <fcntl.h>
++#include <unistd.h>
++int main(void)
++{
++        int fd = open("/dev/tty", O_RDWR);
++        return fsync(fd);
++}], [AC_MSG_RESULT(yes); AC_DEFINE(HAVE_FSYNC)], [AC_MSG_RESULT(no)])
++
+ AC_MSG_CHECKING(for sys_errlist)
+ AC_TRY_LINK(, [extern char *sys_errlist[]; static char **x; x = sys_errlist;], 
+   [AC_MSG_RESULT(yes); AC_DEFINE(HAVE_SYS_ERRLIST)], [AC_MSG_RESULT(no)])
