@@ -2,9 +2,9 @@ diff --git a/Makefile.in b/Makefile.in
 index d087e9e..745e687 100644
 --- a/Makefile.in
 +++ b/Makefile.in
-@@ -71,13 +71,10 @@ charset.${O}: compose.uni ubin.uni wide.uni
+@@ -74,13 +74,10 @@ charset.${O}: compose.uni ubin.uni wide.uni
  
- ${OBJ}: ${srcdir}/less.h ${srcdir}/funcs.h defines.h 
+ ${OBJ}: ${srcdir}/less.h ${srcdir}/funcs.h defines.h lang.h pattern.h xbuf.h
  
 -install: all ${srcdir}/less.nro ${srcdir}/lesskey.nro ${srcdir}/lessecho.nro installdirs
 +install: all installdirs
@@ -17,7 +17,7 @@ index d087e9e..745e687 100644
  
  install-strip:
  	${MAKE} INSTALL_PROGRAM='${INSTALL_PROGRAM} -s' install
-@@ -89,9 +86,6 @@ uninstall:
+@@ -92,9 +89,6 @@ uninstall:
  	rm -f ${DESTDIR}${bindir}/${binprefix}less$(EXEEXT)
  	rm -f ${DESTDIR}${bindir}/${binprefix}lesskey$(EXEEXT)
  	rm -f ${DESTDIR}${bindir}/${binprefix}lessecho$(EXEEXT)
