@@ -9,7 +9,7 @@ Modified for less 581.2 Filip Januš <fjanus@redhat.com>
 diff -ur less-581.2/configure.ac less_fsync/configure.ac
 --- less-581.2/configure.ac	2021-04-28 17:00:08.000000000 +0200
 +++ less_fsync/configure.ac	2021-05-06 10:59:07.560062397 +0200
-@@ -221,6 +221,8 @@
+@@ -212,6 +212,8 @@
  	[Define HAVE_TIME_T if your system supports the "time_t" type.])
  AH_TEMPLATE([HAVE_STRERROR],
  	[Define HAVE_STRERROR if you have the strerror() function.])
@@ -18,18 +18,18 @@ diff -ur less-581.2/configure.ac less_fsync/configure.ac
  AH_TEMPLATE([HAVE_FILENO],
  	[Define HAVE_FILENO if you have the fileno() macro.])
  AH_TEMPLATE([HAVE_ERRNO],
-@@ -274,7 +276,7 @@
+@@ -262,7 +264,7 @@
+ AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[int f(int a) { return a; }]])],[AC_MSG_RESULT(yes); AC_DEFINE(HAVE_ANSI_PROTOS)],[AC_MSG_RESULT(no)])
  
  # Checks for library functions.
- AC_TYPE_SIGNAL
--AC_CHECK_FUNCS([fchmod fsync nanosleep poll popen realpath _setjmp sigprocmask sigsetmask snprintf stat system ttyname usleep])
-+AC_CHECK_FUNCS([fchmod nanosleep poll popen realpath _setjmp sigprocmask sigsetmask snprintf stat system ttyname usleep])
+-AC_CHECK_FUNCS([fchmod fsync nanosleep poll popen realpath _setjmp sigprocmask sigsetmask snprintf stat strsignal system ttyname usleep])
++AC_CHECK_FUNCS([fchmod nanosleep poll popen realpath _setjmp sigprocmask sigsetmask snprintf stat strsignal system ttyname usleep])
  
  # AC_CHECK_FUNCS may not work for inline functions, so test these separately.
  AC_MSG_CHECKING(for memcpy)
-@@ -321,6 +323,16 @@
- #endif], [static char *x; x = strerror(0);],
-   [AC_MSG_RESULT(yes); AC_DEFINE(HAVE_STRERROR)], [AC_MSG_RESULT(no)])
+@@ -304,6 +306,16 @@
+ #include <errno.h>
+ #endif]], [[static char *x; x = strerror(0);]])],[AC_MSG_RESULT(yes); AC_DEFINE(HAVE_STRERROR)],[AC_MSG_RESULT(no)])
  
 +AC_MSG_CHECKING(for fsync)
 +AC_TRY_RUN([
@@ -42,5 +42,5 @@ diff -ur less-581.2/configure.ac less_fsync/configure.ac
 +}], [AC_MSG_RESULT(yes); AC_DEFINE(HAVE_FSYNC)], [AC_MSG_RESULT(no)])
 +
  AC_MSG_CHECKING(for sys_errlist)
- AC_TRY_LINK(, [extern char *sys_errlist[]; static char **x; x = sys_errlist;], 
-   [AC_MSG_RESULT(yes); AC_DEFINE(HAVE_SYS_ERRLIST)], [AC_MSG_RESULT(no)])
+ AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[extern char *sys_errlist[]; static char **x; x = sys_errlist;]])],[AC_MSG_RESULT(yes); AC_DEFINE(HAVE_SYS_ERRLIST)],[AC_MSG_RESULT(no)])
+ 
